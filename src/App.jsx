@@ -21,11 +21,6 @@ const ICONS = {
       <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"/>
     </svg>
   ),
-  fullscreen: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-    </svg>
-  ),
   camera: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
@@ -57,10 +52,10 @@ function GridOverlay({ mode }) {
   if (mode === "thirds" || mode === "both") {
     // Rule of thirds
     lines.push(
-      <line key="v1" x1="33.33%" y1="0" x2="33.33%" y2="100%" stroke="rgba(232,255,90,0.35)" strokeWidth="1"/>,
-      <line key="v2" x1="66.66%" y1="0" x2="66.66%" y2="100%" stroke="rgba(232,255,90,0.35)" strokeWidth="1"/>,
-      <line key="h1" x1="0" y1="33.33%" x2="100%" y2="33.33%" stroke="rgba(232,255,90,0.35)" strokeWidth="1"/>,
-      <line key="h2" x1="0" y1="66.66%" x2="100%" y2="66.66%" stroke="rgba(232,255,90,0.35)" strokeWidth="1"/>,
+      <line key="v1" x1="33.33%" y1="0" x2="33.33%" y2="100%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
+      <line key="v2" x1="66.66%" y1="0" x2="66.66%" y2="100%" stroke="rgba(232,255,90,0.7))" strokeWidth="1"/>,
+      <line key="h1" x1="0" y1="33.33%" x2="100%" y2="33.33%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
+      <line key="h2" x1="0" y1="66.66%" x2="100%" y2="66.66%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
     );
   }
 
@@ -68,16 +63,16 @@ function GridOverlay({ mode }) {
     // 4x4 grid
     for (let i = 1; i < 4; i++) {
       lines.push(
-        <line key={`sv${i}`} x1={`${i * 25}%`} y1="0" x2={`${i * 25}%`} y2="100%" stroke="rgba(255,255,255,0.12)" strokeWidth="0.5"/>,
-        <line key={`sh${i}`} x1="0" y1={`${i * 25}%`} x2="100%" y2={`${i * 25}%`} stroke="rgba(255,255,255,0.12)" strokeWidth="0.5"/>,
+        <line key={`sv${i}`} x1={`${i * 25}%`} y1="0" x2={`${i * 25}%`} y2="100%" stroke="rgba(255,255,255,0.35)" strokeWidth="0.5"/>,
+        <line key={`sh${i}`} x1="0" y1={`${i * 25}%`} x2="100%" y2={`${i * 25}%`} stroke="rgba(255,255,255,0.35))" strokeWidth="0.5"/>,
       );
     }
   }
 
   // Center cross
   lines.push(
-    <line key="cx" x1="50%" y1="45%" x2="50%" y2="55%" stroke="rgba(232,255,90,0.5)" strokeWidth="1"/>,
-    <line key="cy" x1="45%" y1="50%" x2="55%" y2="50%" stroke="rgba(232,255,90,0.5)" strokeWidth="1"/>,
+    <line key="cx" x1="50%" y1="45%" x2="50%" y2="55%" stroke="rgba(232,255,90,0.9)" strokeWidth="1"/>,
+    <line key="cy" x1="45%" y1="50%" x2="55%" y2="50%" stroke="rgba(232,255,90,0.9)" strokeWidth="1"/>,
   );
 
   return (
@@ -109,7 +104,6 @@ export default function ARDrawing() {
   const [frozen, setFrozen] = useState(false);
   const [activeCamera, setActiveCamera] = useState("environment");
   const [cameraError, setCameraError] = useState(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [panelVisible, setPanelVisible] = useState(true);
   const [imgPos, setImgPos] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
@@ -161,14 +155,6 @@ export default function ARDrawing() {
     return () => document.removeEventListener("fullscreenchange", handler);
   }, []);
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
   const toggleFreeze = () => {
     if (!videoRef.current) return;
     if (!frozen) { videoRef.current.pause(); } else { videoRef.current.play(); }
@@ -212,28 +198,28 @@ export default function ARDrawing() {
 
   const onMouseUp = () => setDragging(false);
 
-  // Touch: drag (1 finger) + pinch-to-zoom (2 fingers)
   const onTouchStart = (e) => {
     if (e.target !== imgRef.current) return;
-
+  
     if (e.touches.length === 1) {
       const t = e.touches[0];
       setDragging(true);
-      dragStart.current = { mx: t.clientX, my: t.clientY, ix: imgPos.x, iy: imgPos.y };
       pinchRef.current = null;
+      dragStart.current = { mx: t.clientX, my: t.clientY, ix: imgPos.x, iy: imgPos.y };
     } else if (e.touches.length === 2) {
       setDragging(false);
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       const dist = Math.hypot(dx, dy);
-      pinchRef.current = { dist, scale };
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+      pinchRef.current = { dist, scale, angle, rotation };
     }
   };
-
+  
   const onTouchMove = (e) => {
     if (e.target !== imgRef.current) return;
     e.preventDefault();
-
+  
     if (e.touches.length === 1 && dragging && dragStart.current) {
       const t = e.touches[0];
       setImgPos({
@@ -244,18 +230,24 @@ export default function ARDrawing() {
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       const dist = Math.hypot(dx, dy);
-      const ratio = dist / pinchRef.current.dist;
-      const newScale = Math.round(Math.min(Math.max(pinchRef.current.scale * ratio, 10), 300));
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+  
+      // scale
+      const newScale = Math.round(Math.min(Math.max(pinchRef.current.scale * (dist / pinchRef.current.dist), 10), 300));
       setScale(newScale);
+  
+      // rotation
+      const angleDelta = angle - pinchRef.current.angle;
+      const newRotation = Math.round(((pinchRef.current.rotation + angleDelta) % 360 + 360) % 360);
+      setRotation(newRotation > 180 ? newRotation - 360 : newRotation);
     }
   };
-
+  
   const onTouchEnd = (e) => {
     if (e.touches.length === 0) {
       setDragging(false);
       pinchRef.current = null;
     } else if (e.touches.length === 1 && pinchRef.current) {
-      // Transition from pinch back to drag
       const t = e.touches[0];
       setDragging(true);
       dragStart.current = { mx: t.clientX, my: t.clientY, ix: imgPos.x, iy: imgPos.y };
@@ -442,7 +434,6 @@ export default function ARDrawing() {
             <IconBtn icon={ICONS.grid} label={GRID_LABELS[gridMode]} onClick={cycleGrid} active={gridMode !== "none"} />
             <IconBtn icon={ICONS.freeze} label={frozen ? "Unfreeze" : "Freeze"} onClick={toggleFreeze} active={frozen} />
             <IconBtn icon={ICONS.camera} label="Cam" onClick={switchCamera} />
-            <IconBtn icon={ICONS.fullscreen} label="Fullscreen" onClick={toggleFullscreen} active={isFullscreen} />
           </div>
 
           {image && (
