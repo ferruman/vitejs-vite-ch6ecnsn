@@ -41,6 +41,16 @@ const ICONS = {
       <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
     </svg>
   ),
+  lock: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  ),
+  reset: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+    </svg>
+  ),
 };
 
 // Grid overlay component
@@ -107,6 +117,7 @@ export default function ARDrawing() {
   const [panelVisible, setPanelVisible] = useState(true);
   const [imgPos, setImgPos] = useState({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
+  const [locked, setLocked] = useState(false);
   const [gridMode, setGridMode] = useState("none");
   const [rotation, setRotation] = useState(0);
   const dragStart = useRef(null);
@@ -183,6 +194,7 @@ export default function ARDrawing() {
   // Mouse drag
   const onMouseDown = (e) => {
     if (e.target !== imgRef.current) return;
+    if (locked) return;
     e.preventDefault();
     setDragging(true);
     dragStart.current = { mx: e.clientX, my: e.clientY, ix: imgPos.x, iy: imgPos.y };
@@ -200,7 +212,7 @@ export default function ARDrawing() {
 
   const onTouchStart = (e) => {
     if (e.target !== imgRef.current) return;
-  
+    if (locked) return;
     if (e.touches.length === 1) {
       const t = e.touches[0];
       setDragging(true);
@@ -381,6 +393,15 @@ export default function ARDrawing() {
               ⏸ FROZEN
             </div>
           )}
+          {locked && (
+            <div style={{
+              background: "rgba(100,150,255,0.85)", backdropFilter: "blur(6px)",
+              borderRadius: 8, padding: "5px 12px",
+              color: "#fff", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em",
+            }}>
+              🔒 LOCKED
+            </div>
+          )}
           {gridMode !== "none" && (
             <div style={{
               background: "rgba(232,255,90,0.15)", backdropFilter: "blur(6px)",
@@ -434,6 +455,9 @@ export default function ARDrawing() {
             <IconBtn icon={ICONS.grid} label={GRID_LABELS[gridMode]} onClick={cycleGrid} active={gridMode !== "none"} />
             <IconBtn icon={ICONS.freeze} label={frozen ? "Unfreeze" : "Freeze"} onClick={toggleFreeze} active={frozen} />
             <IconBtn icon={ICONS.camera} label="Cam" onClick={switchCamera} />
+            <Divider />
+            <IconBtn icon={ICONS.reset} label="Reset" onClick={() => setImgPos({ x: 0, y: 0 })} />
+            <IconBtn icon={ICONS.lock} label={locked ? "Unlock" : "Lock"} onClick={() => setLocked(l => !l)} active={locked} />
           </div>
 
           {image && (
