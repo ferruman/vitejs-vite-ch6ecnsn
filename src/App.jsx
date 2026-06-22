@@ -444,20 +444,29 @@ export default function ARDrawing() {
           </div>
 
           {/* Buttons */}
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <div className="btn-row" style={{
+            display: "flex", gap: 8, alignItems: "center",
+            overflowX: "auto", overflowY: "hidden",
+            paddingBottom: 4,
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE
+            }}>
+            <style>{`.btn-row::-webkit-scrollbar { display: none; }`}</style>
             <IconBtn icon={ICONS.upload} label="Image" onClick={() => fileInputRef.current?.click()} accent />
             {image && <IconBtn icon={ICONS.close} label="Clear" onClick={() => setImage(null)} />}
+            <Divider />
+            <IconBtn icon={ICONS.grid} label={GRID_LABELS[gridMode]} onClick={cycleGrid} active={gridMode !== "none"} />
+            <Divider />
+            <IconBtn icon={ICONS.reset} label="Reset" onClick={() => { setImgPos({ x: 0, y: 0 }); setScale(80); setRotation(0); }} />
+            <IconBtn icon={ICONS.lock} label={locked ? "Unlock" : "Lock"} onClick={() => setLocked(l => !l)} active={locked} />
             <Divider />
             <IconBtn icon={ICONS.flipH} label="Flip H" onClick={() => setFlipH(f => !f)} active={flipH} />
             <IconBtn icon={ICONS.flipV} label="Flip V" onClick={() => setFlipV(f => !f)} active={flipV} />
             <IconBtn icon={ICONS.invert} label="Invert" onClick={() => setInvert(f => !f)} active={invert} />
             <Divider />
-            <IconBtn icon={ICONS.grid} label={GRID_LABELS[gridMode]} onClick={cycleGrid} active={gridMode !== "none"} />
             <IconBtn icon={ICONS.freeze} label={frozen ? "Unfreeze" : "Freeze"} onClick={toggleFreeze} active={frozen} />
             <IconBtn icon={ICONS.camera} label="Cam" onClick={switchCamera} />
-            <Divider />
-            <IconBtn icon={ICONS.reset} label="Reset" onClick={() => { setImgPos({ x: 0, y: 0 }); setScale(80); setRotation(0); }} />
-            <IconBtn icon={ICONS.lock} label={locked ? "Unlock" : "Lock"} onClick={() => setLocked(l => !l)} active={locked} />
+          
           </div>
 
           {image && (
