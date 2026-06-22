@@ -139,7 +139,7 @@ export default function ARDrawing() {
   const [flipV, setFlipV] = useState(false);
   const [invert, setInvert] = useState(false);
   const [frozen, setFrozen] = useState(false);
-  const [cameras, setCameras] = useState([]);
+  const [, setCameras] = useState([]);
   const [activeCamera, setActiveCamera] = useState('environment');
   const [cameraError, setCameraError] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
