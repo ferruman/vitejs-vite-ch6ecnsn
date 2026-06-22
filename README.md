@@ -1,32 +1,54 @@
-# React + TypeScript + Vite
+# AR Drawing
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A free, browser-based AR drawing tool. Upload any image and trace it on paper using your phone camera — no app install needed.
 
-Currently, two official plugins are available:
+Live: [ardrawing-nu.vercel.app](https://ardrawing-nu.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+Projects a semi-transparent image overlay on top of your camera feed. Place a sheet of paper in front of your screen, adjust the opacity, and trace the outline.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the Oxlint configuration
+- Live camera feed with image overlay
+- Adjustable opacity and size
+- Rotate overlay — slider or two-finger twist gesture
+- Drag to reposition, pinch to zoom
+- Flip horizontal / vertical
+- Invert image colors
+- Grid overlay — rule of thirds, square grid, or both
+- Freeze frame
+- Front / rear camera switch
+- Wake lock — screen stays on while tracing
+- PWA — install to home screen, works offline
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Usage
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+1. Open the site in Safari (iOS) or Chrome (Android)
+2. Allow camera access
+3. Tap the image area or press **Image** to upload a reference photo
+4. Adjust opacity so you can see both the image and the paper underneath
+5. Place paper on your screen or hold your phone over the paper and trace
+
+To install as an app: Safari → Share → Add to Home Screen.
+
+## Tech stack
+
+- React + Vite
+- WebRTC (`getUserMedia`) for camera
+- Wake Lock API
+- CSS transforms for overlay manipulation
+- Deployed on Vercel
+
+## Local development
+
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open `http://localhost:5173` — camera works on localhost without HTTPS.
+
+## License
+
+MIT
