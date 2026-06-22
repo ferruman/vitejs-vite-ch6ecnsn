@@ -456,7 +456,7 @@ export default function ARDrawing() {
             <IconBtn icon={ICONS.freeze} label={frozen ? "Unfreeze" : "Freeze"} onClick={toggleFreeze} active={frozen} />
             <IconBtn icon={ICONS.camera} label="Cam" onClick={switchCamera} />
             <Divider />
-            <IconBtn icon={ICONS.reset} label="Reset" onClick={() => setImgPos({ x: 0, y: 0 })} />
+            <IconBtn icon={ICONS.reset} label="Reset" onClick={() => { setImgPos({ x: 0, y: 0 }); setScale(80); setRotation(0); }} />
             <IconBtn icon={ICONS.lock} label={locked ? "Unlock" : "Lock"} onClick={() => setLocked(l => !l)} active={locked} />
           </div>
 
