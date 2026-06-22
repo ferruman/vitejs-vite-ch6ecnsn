@@ -53,7 +53,7 @@ function GridOverlay({ mode }) {
     // Rule of thirds
     lines.push(
       <line key="v1" x1="33.33%" y1="0" x2="33.33%" y2="100%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
-      <line key="v2" x1="66.66%" y1="0" x2="66.66%" y2="100%" stroke="rgba(232,255,90,0.7))" strokeWidth="1"/>,
+      <line key="v2" x1="66.66%" y1="0" x2="66.66%" y2="100%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
       <line key="h1" x1="0" y1="33.33%" x2="100%" y2="33.33%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
       <line key="h2" x1="0" y1="66.66%" x2="100%" y2="66.66%" stroke="rgba(232,255,90,0.7)" strokeWidth="1"/>,
     );
@@ -64,7 +64,7 @@ function GridOverlay({ mode }) {
     for (let i = 1; i < 4; i++) {
       lines.push(
         <line key={`sv${i}`} x1={`${i * 25}%`} y1="0" x2={`${i * 25}%`} y2="100%" stroke="rgba(255,255,255,0.35)" strokeWidth="0.5"/>,
-        <line key={`sh${i}`} x1="0" y1={`${i * 25}%`} x2="100%" y2={`${i * 25}%`} stroke="rgba(255,255,255,0.35))" strokeWidth="0.5"/>,
+        <line key={`sh${i}`} x1="0" y1={`${i * 25}%`} x2="100%" y2={`${i * 25}%`} stroke="rgba(255,255,255,0.35)" strokeWidth="0.5"/>,
       );
     }
   }
